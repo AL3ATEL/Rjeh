@@ -1,121 +1,162 @@
 // ==UserScript==
 // @name           ICEbot v6
-// @name:tr        made by frio
-// @name:az        hello
-// @description    Bot Panel for gartic.io
-// @description:tr Bot Panel for gartic.io (in Turkish)
-// @description:az Bot Panel for gartic.io (in Azerbaijani)
 // @version        4.0
 // @author         frio
 // @license        MIT
 // @match          *://gartic.io/*
-// @match          *://*/*?__cpo=aHR0cHM6Ly9nYXJ0aWMuaW8
 // @icon           https://cdn.discordapp.com/attachments/1124451069204910161/1177654466523189360/MOSHED-2023-11-24-13-55-23.jpg?ex=65734b30&is=6560d630&hm=1b42ff32759ea222cc3b1eac33cb7852209358d47e44c560b10efe0f8f230752&
 // @grant          GM_setValue
 // @grant          GM_getValue
 // @grant          GM_addValueChangeListener
-// @grant          GM_addStyle
 // @namespace https://greasyfork.org/users/1220697
 // @downloadURL https://update.greasyfork.org/scripts/481540/Bot%20panel.user.js
 // @updateURL https://update.greasyfork.org/scripts/481540/Bot%20panel.meta.js
 // ==/UserScript==
 
-
-
-    let rand = x => Math.floor(Math.random() * 1000000),
+let rand = x => Math.floor(Math.random() * 1000000),
     GM_onMessage = (label, cb) => GM_addValueChangeListener(label, (_, __, data) => cb(...data)),
     GM_sendMessage = (label, ...data) => GM_setValue(label, data);
 GM_onMessage('answerinput', (atılacak, _) => {
-
-                    document.querySelector('#answer').value= atılacak
-    })
+    document.querySelector('#answer').value = atılacak
+})
 GM_onMessage('changedraw', (atılacak, _) => {
+    document.querySelector('#answer').value = atılacak
+})
+function f(ICE) { return document.querySelector(ICE) }
+function fa(ICE) { return document.querySelectorAll(ICE) }
+function num(ICE) { return Math.ceil(Math.random() * ICE + 1) }
+function rc(ICE) { let e = f('input[name="chat"]'); let lv = e.value; e.value = ""; let ev = new Event('input', { bubbles: true }); ev.simulated = true; let t = e._valueTracker; if (t) { t.setValue(lv); }; e.dispatchEvent(ev); }
+function rs(ICE) { let e = f(".search input"); let lv = e.value; e.value = ""; let ev = new Event('input', { bubbles: true }); ev.simulated = true; let t = e._valueTracker; if (t) { t.setValue(lv); }; e.dispatchEvent(ev); }
 
-                    document.querySelector('#answer').value= atılacak
-    })
-function f(ICE){return document.querySelector(ICE)}
-function fa(ICE){return document.querySelectorAll(ICE)}
-function num(ICE){return Math.ceil(Math.random()*ICE+1)}
-function rc(ICE){let e=f('input[name="chat"]');let lv=e.value;e.value="";let ev=new Event('input',{bubbles:true});ev.simulated=true;let t=e._valueTracker;if(t){t.setValue(lv);};e.dispatchEvent(ev);}
-function rs(ICE){let e=f(".search input");let lv=e.value;e.value="";let ev=new Event('input',{bubbles:true});ev.simulated=true;let t=e._valueTracker;if(t){t.setValue(lv);};e.dispatchEvent(ev);}
-function rnext(kelime) {
-  const hd = kelime.split('');
-  const hu = hd.length;
-  const yh = [];
-  const invisibleChars = ['\u200B', '\u200C', '\u200D', '\u2061', '\u2062', '\u2063', '\u2064', '\u2066', '\u17b4', '\u17b5', '\u2068', '\u2069']
-  let charCount = 0;
+let cmd = "", wss = [], tojoin = 0, usersinroom = [], customkickitems = [], messagejoinitems = [], tfr, tg, intervalbroadcast, intervalmsg, intervalanswer, intervalantiafk, rainbowdraw, rainbowdrawmode = false, botsidvalue = [], wordsInterval, botID, botlongID, theme, am, avatar = localStorage.getItem("avatar"), botnick = localStorage.getItem("botnick"), nick = localStorage.getItem("nick")
 
-  for (let i = 0; i < hu; i++) {
-    yh.push(hd[i]);
-    charCount++;
+if (window.location.href.indexOf("aHR0cHM6Ly9nYXJ0aWMuaW8") != -1) {
+    let room, kicknewstat = false, kickjoinstat = false, autoreport = false, autoskip = false, antiafk = false, antikick = false, antikickDelay = 1, autokick = false, autoguess, autofarm = false, waitforkick = 0
 
-    if (charCount < 18 && i < hu - 1) {
-      const invisibleChar = invisibleChars[Math.floor(Math.random() * invisibleChars.length)];
-      yh.push(invisibleChar);
-      charCount++;
+    const addItem = (arr, ...arguments) => { for (let i = 0; i < arguments.length; i++) { arr[arr.length] = arguments[i]; } return arr; };
+
+    function arrayFilter(array) {
+        return array.filter((value, index, arr) => arr.indexOf(value) === index);
     }
 
-    if (charCount >= 18) {
-      break;
-    }
-  }
+    GM_setValue("botekle", rand())
 
-  return yh.join('');
-}
-let cmd="",wss=[],tojoin=0,usersinroom=[],customkickitems=[],messagejoinitems=[],tfr,tg,intervalbroadcast,intervalmsg,intervalanswer,intervalantiafk,rainbowdraw,rainbowdrawmode=false,botsidvalue=[],wordsInterval,botID,botlongID,theme,am,avatar=localStorage.getItem("avatar"),botnick=localStorage.getItem("botnick"),nick=localStorage.getItem("nick")
-        if(window.location.href.indexOf("aHR0cHM6Ly9nYXJ0aWMuaW8")!=-1){
-    let room,kicknewstat=false,kickjoinstat=false,autoreport=false,autoskip=false,antiafk=false,antikick=false,antikickDelay=1,autokick=false,autoguess,autofarm=false,waitforkick=0
-
-const addItem = (arr, ...arguments) => { for (let i = 0; i < arguments.length; i++) { arr[arr.length] = arguments[i]; } return arr; };
-
-function arrayFilter(array) {
-  return array.filter((value, index, arr) => arr.indexOf(value) === index);
-}
-
-    GM_setValue("botekle",rand())
-
-    GM_addValueChangeListener("resetcount", function(I,C,E,b) {
-        GM_setValue("botekle",rand())
+    GM_addValueChangeListener("resetcount", function (I, C, E, b) {
+        GM_setValue("botekle", rand())
     })
-    setTimeout(()=>{waitforkick=0},1000)
-    GM_onMessage("reconnect", (_,__)=>{
-const storedArray = JSON.parse(localStorage.getItem('ws-reconnect-data')) || [];
-storedArray.forEach(obj => {
-  let rws= new WebSocket("wss://"+obj.server+".gartic.io/socket.io/?c="+obj.code+"&EIO=3&transport=websocket");
- rws.onopen=()=>{rws.send('42[7,"'+obj.room+'",'+obj.timestamp+']');
-    GM_onMessage("cmd", (cmd,x)=> { switch(cmd) {
-    case "broadcast":
-      rws.send('42[11,'+obj.timestamp+',"'+x+'"]')
-      rws.send('42[13,'+obj.timestamp+',"'+x+'"]')
-      break;
-    case "msg":
-      rws.send('42[11,'+obj.timestamp+',"'+x+'"]')
-      break;
-    case "answer":
-      rws.send('42[13,'+obj.timestamp+',"'+x+'"]')
-      break;
-    case "report":
-      rws.send('42[35,'+obj.timestamp+']')
-      break;
-    case "jump":
-      rws.send('42[25,'+obj.timestamp+']')
-      break;
-    case "accept1":
-      rws.send('42[34,'+obj.timestamp+']')
-      break;
-    case "accept2":
-      rws.send('42[34,'+obj.timestamp+',1]')
-      break;
-    case "tips":
-      rws.send('42[30,'+obj.timestamp+',1]')
-      break;
-    case "exit":
-      rws.send('42[24,'+obj.timestamp+']')
-      break;
-    case "kick":
-                              if(!botsidvalue.includes(x.split("..")[0])){
-      rws.send('42[45,'+obj.timestamp+',["'+x.split("..")[0]+'",true]]')}
-      break;
+    setTimeout(() => { waitforkick = 0 }, 1000)
+    GM_onMessage("reconnect", (_, __) => {
+        const storedArray = JSON.parse(localStorage.getItem('ws-reconnect-data')) || [];
+        storedArray.forEach(obj => {
+            let rws = new WebSocket("wss://" + obj.server + ".gartic.io/socket.io/?c=" + obj.code + "&EIO=3&transport=websocket");
+            rws.onopen = () => {
+                rws.send('42[7,"' + obj.room + '",' + obj.timestamp + ']');
+                GM_onMessage("cmd", (cmd, x) => {
+                    switch (cmd) {
+                        case "broadcast":
+                            rws.send('42[11,' + obj.timestamp + ',"' + x + '"]')
+                            rws.send('42[13,' + obj.timestamp + ',"' + x + '"]')
+                            break;
+                        case "msg":
+                            rws.send('42[11,' + obj.timestamp + ',"' + x + '"]')
+                            break;
+                        case "answer":
+                            rws.send('42[13,' + obj.timestamp + ',"' + x + '"]')
+                            break;
+                        case "report":
+                            rws.send('42[35,' + obj.timestamp + ']')
+                            break;
+                        case "jump":
+                            rws.send('42[25,' + obj.timestamp + ']')
+                            break;
+                        case "accept1":
+                            rws.send('42[34,' + obj.timestamp + ']')
+                            break;
+                        case "accept2":
+                            rws.send('42[34,' + obj.timestamp + ',1]')
+                            break;
+                        case "tips":
+                            rws.send('42[30,' + obj.timestamp + ',1]')
+                            break;
+                        case "exit":
+                            rws.send('42[24,' + obj.timestamp + ']')
+                            break;
+                        case "kick":
+                            if (!botsidvalue.includes(x.split("..")[0])) {
+                                rws.send('42[45,' + obj.timestamp + ',["' + x.split("..")[0] + '",true]]')
+                            }
+                            break;
+                    }
+                })
+            }
+
+            rws.onclose = () => {
+                wss.length = 0
+                rws.close();
+            }
+
+            rws.onmessage = (msg) => {
+                if (msg.data.indexOf('42["23"') != -1) {
+                    let user = JSON.parse('{' + msg.data.split("{")[1].split("}")[0] + '}');
+                    usersinroom.push(user);
+                }
+
+                if (msg.data.indexOf('42["5"') != -1) {
+                    let objlist = JSON.parse('["5"' + msg.data.split('42["5"')[1]);
+                    ws.theme = objlist[4].tema;
+                    ws.room = objlist[4].codigo;
+                    ws.id = objlist[2];
+                    objlist[5].forEach(item => { usersinroom.push(item) });
+                    botID = objlist[2];
+                    botlongID = objlist[1];
+                    theme = objlist[4].tema;
+                    setTimeout(() => { f(".roomtheme").innerHTML = theme }, 10)
+                    setTimeout(() => { GM_sendMessage("botsidvalue", botlongID, rand()) }, 777)
+                    setTimeout(() => { GM_sendMessage("updatelist", botID, rand()) }, 777)
+                }
+
+                GM_onMessage('answerinput', (atılacak, _) => {
+                    f('#answer').value = atılacak
+                })
+
+                window.wsObj.addEventListener("message", (msg) => {
+                    if (msg.data.indexOf('42["23"') != -1) {
+                        let user = JSON.parse('{' + msg.data.split("{")[1].split("}")[0] + '}');
+                        usersinroom.push(user);
+                        addClickEventToUsernames();
+                    }
+                });
+
+                function addClickEventToUsernames() {
+                    const usernames = document.querySelectorAll('.user-name-class');
+
+                    usernames.forEach(userElem => {
+                        userElem.addEventListener('click', () => {
+                            const clickedUsername = userElem.textContent.trim();
+                            const userToKick = usersinroom.find(user => user.name === clickedUsername);
+
+                            if (userToKick) {
+                                const kickCommand = `42[45,${ws.id},["${userToKick.id}", true]]`;
+                                copyToClipboard(kickCommand);
+                                alert(`تم نسخ أمر الطرد لهذا المستخدم: ${clickedUsername}`);
+                                ws.send(kickCommand);
+                            }
+                        });
+                    });
+                }
+
+                function copyToClipboard(text) {
+                    const textarea = document.createElement('textarea');
+                    textarea.value = text;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                }
+            }
+        });
+    });
+}
 
                                                      }})
                                                        }})})
