@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>AL3ATELWHOWHERE</title>
+    <link rel="icon" href="icon.png" type="image/icon type">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(45deg, #6a1b9a, #d32f2f, #1976d2, #388e3c);
+            background-size: 400% 400%;
+            animation: gradientAnimation 10s ease infinite;
+            color: #ecf0f1;
+            overflow: hidden;
+            transition: background-color 0.3s ease;
+        }
+
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .leftcontent,
+        .rightcontent,
+        .chat {
+            background: rgba(26, 26, 26, 0.9);
+            border: 1px solid #444;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .leftcontent:hover,
+        .rightcontent:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
+        }
+
+        .tv {
+            width: 100%;
+            height: 20%;
+            border-radius: 10px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6);
+            transition: transform 0.3s ease;
+        }
+
+        .tv:hover {
+            transform: scale(1.05);
+        }
+
+        .leftcontent {
+            width: 70%;
+        }
+
+        .rightcontent {
+            width: 30%;
+            color: #ecf0f1;
+            display: block;
+        }
+
+        h2 {
+            font-size: 20pt;
+            margin-bottom: 12px;
+            color: #9b59b6;
+            text-shadow: 0px 0px 20px #9b59b6, 0px 0px 30px #9b59b6;
+            transition: color 0.3s ease;
+        }
+
+        h2:hover {
+            color: #372659;
+            text-shadow: 0px 0px 30px #ecf0f1, 0px 0px 40px #ecf0f1;
+        }
+
+        .room {
+            display: flex;
+            background: #372659;
+            font-size: 26pt;
+            color: #ffffff;
+            border-radius: 12px;
+            margin-top: 15px;
+            padding: 20px;
+            font-weight: bold;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+            text-shadow: 0px 0px 15px #ff79c6;
+        }
+
+        .room:hover {
+            background: #4a3f7a;
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+            text-shadow: 0px 0px 30px #ecf0f1, 0px 0px 40px #ecf0f1;
+        }
+
+        .roomico {
+            width: 40px;
+            height: 40px;
+            margin-right: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .roomico:hover {
+            transform: rotate(360deg);
+        }
+
+        input,
+        select {
+            padding: 12px;
+            background: #333;
+            color: #fff;
+            font-size: 14pt;
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #444;
+            transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+        }
+
+        input[type="submit"] {
+            background-color: #372659;
+            color: #ffffff;
+            font-weight: bold;
+            cursor: pointer;
+            border: 1px solid #4a3f7a;
+            transition: background 0.3s ease, transform 0.3s ease;
+            box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.5);
+        }
+
+        input[type="submit"]:hover {
+            background-color: #4a3f7a;
+            transform: scale(1.1);
+            box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.7);
+        }
+
+        .favico {
+            width: 35px;
+            height: 35px;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translate(0, -50%);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .favico:hover {
+            transform: scale(1.2);
+        }
+
+        .selected {
+            background: #e74c3c;
+        }
+
+        .roomtxt {
+            width: 100%;
+            padding: 12px;
+            background: #333;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            color: white;
+            font-size: 14pt;
+        }
+
+        ::-webkit-scrollbar {
+            width: 12px;
+            border-radius: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #444;
+            border-radius: 12px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
+    </style>
+    <script>
+        let favtype = "", favhtml = "", html = "", monfav = 0;
+
+        window.addEventListener("load", () => {
+            if (localStorage.getItem("favs") == null || localStorage.getItem("favs") == undefined) {
+                localStorage.setItem("favs", "");
+            }
+            loadRooms();
+
+            setInterval(() => {
+                loadRooms();
+                document.querySelector("input[type='submit']").click();
+            }, 30000);
+        });
+
+        function loadRooms(lng = "") {
+            document.querySelector(".rooms").innerHTML = "";
+            favhtml = "";
+            html = "";
+
+            fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(`https://gartic.io/req/list?search=${document.querySelector(".searchparam").value}&language[]=${lng}${document.querySelector(".theme").value}`)}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    let parsedData;
+                    try {
+                        parsedData = JSON.parse(data.contents);
+                    } catch (e) {
+                        console.error("Error parsing JSON data:", e);
+                        return;
+                    }
+
+                    parsedData.forEach(x => {
+                        searchfav(x.code) != -1 ? favtype = "fav" : favtype = "unfav";
+                        let roomHTML = `<div onclick="tv(this,'https://gartic.io/${x.code}/viewer')" class="room">
+                                            <img class="roomico" src="https://gartic.io/static/images/subjects/${x.subject}.svg">
+                                            <div class="roominfo">#${x.code.slice(-3)} ${x.quant}/${x.max}</div>
+                                            <img onmouseover="monfav=1" onmouseout="monfav=0" onclick="favprocess(this,'${x.code}')" src="${favtype}.svg" class="favico">
+                                          </div>`;
+
+                        if (favtype == "fav") {
+                            favhtml += roomHTML;
+                        }
+
+                        html += roomHTML;
+                    });
+
+                    if (document.querySelector(".justfav").checked) {
+                        document.querySelector(".rooms").innerHTML = favhtml;
+                    } else {
+                        document.querySelector(".rooms").innerHTML = html;
+                    }
+                })
+                .catch(err => console.error("Fetch error:", err));
+        }
+
+        function tv(el, x) {
+            if (monfav == 0) {
+                document.querySelectorAll(".room").forEach(x => x.classList.remove("selected"));
+                el.classList.add("selected");
+                window.onbeforeunload = null;
+                document.querySelector(".tv").setAttribute("src", x);
+                document.querySelector(".roomtxt").value = x.split("/viewer")[0];
+            }
+        }
+
+        function searchfav(x) {
+            return localStorage.getItem("favs").indexOf(x);
+        }
+
+        function addfav(x) {
+            if (searchfav(x) == -1) {
+                localStorage.setItem("favs", localStorage.getItem("favs") + x + ";");
+            }
+        }
+
+        function delfav(x) {
+            if (searchfav(x) != -1) {
+                localStorage.setItem("favs", localStorage.getItem("favs").split(x + ";").join(""));
+            }
+        }
+
+        function favprocess(x, y) {
+            if (searchfav(y) == -1) {
+                addfav(y);
+                x.setAttribute("src", "fav.svg");
+            } else {
+                delfav(y);
+                x.setAttribute("src", "unfav.svg");
+            }
+        }
+    </script>
+</head>
+
+<body>
+
+    <div class="leftcontent">
+        <iframe class="tv" src="main.html">Bu tarayıcı desteklenmiyor.</iframe>
+    </div>
+
+    <div class="rightcontent">
+        <h2>𝙽𝙺𝙻 𝚆𝙷𝙾𝚆𝙷𝙴𝚁𝙴 𝚅𝟸</h2><br>
+        <input onclick="this.select()" placeholder="رابط الروم" class="roomtxt"><br>
+        <input type="text" class="searchparam" placeholder="اسم الروم" onkeyup="loadRooms(document.querySelector('.lang').value)">
+        <select class="theme" onchange="loadRooms(document.querySelector('.lang').value)"></select>
+        <select class="lang" onchange="loadRooms(this.value)">
+            <option value="19">العربية</option>
+        </select>&nbsp;
+        <input type="submit" value="إظهار " onclick="loadRooms(document.querySelector('.lang').value)">
+        </h2><br>иĸℓ <input type="checkbox" class="justfav"><br><br><hr>
+        <div class="rooms">
+        </div>
+    </div>
+
+</body>
+
+</html>
